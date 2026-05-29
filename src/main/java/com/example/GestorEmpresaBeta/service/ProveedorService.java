@@ -21,7 +21,7 @@ public class ProveedorService {
             throw new RuntimeException("Error al guardar el cliente: " + e.getMessage(), e);
         }
     }
-    public Proveedor obtenerProveedorID(Long id){
+    public Proveedor obtenerProveedorId(Long id){
         try {
             if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             return proveedorRepository.findById(id).orElse(null);
