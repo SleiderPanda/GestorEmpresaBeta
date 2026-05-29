@@ -26,7 +26,7 @@ public class ClienteService {
 
     public Cliente obtenerClienteId(Long id){
         try {
-            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
+            if (id == null || id < 1) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             return clienteRepositoryRepository.findById(id).orElse(null);
         } catch (IllegalArgumentException e) {
             throw e;
@@ -46,7 +46,7 @@ public class ClienteService {
 
     public boolean eliminarCliente(Long id){
         try {
-            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
+            if (id == null || id < 1) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             if (!clienteRepositoryRepository.existsById(id)) return false;
             clienteRepositoryRepository.deleteById(id);
             return true;
@@ -59,7 +59,7 @@ public class ClienteService {
 
     public Cliente actualizarCliente(Long id, Cliente datosCambiar){
         try {
-            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
+            if (id == null || id < 1) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             Cliente existente = clienteRepositoryRepository.findById(id).orElse(null);
             if (existente == null) return null;
             validarCliente(datosCambiar);

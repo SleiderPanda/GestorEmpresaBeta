@@ -23,7 +23,7 @@ public class EmpleadoSerivce {
     }
     public Empleado obtenerEmpleadoId(Long id) {
         try {
-            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
+            if (id == null || id < 1) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             return empleadoRepository.findById(id).orElse(null);
         } catch (IllegalArgumentException e) {
             throw e;
@@ -41,7 +41,7 @@ public class EmpleadoSerivce {
     }
     public boolean eliminarEmpleado(Long id){
         try {
-            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
+            if (id == null || id < 1) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             if (!empleadoRepository.existsById(id)) return false;
             empleadoRepository.deleteById(id);
             return true;
@@ -53,7 +53,7 @@ public class EmpleadoSerivce {
     }
     public Empleado actualizarEmpleado(Long id, Empleado datosCambiar){
         try {
-            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
+            if (id == null || id < 1) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             Empleado existente = empleadoRepository.findById(id).orElse(null);
             if (existente == null) return null;
             validarEmpleado(datosCambiar);

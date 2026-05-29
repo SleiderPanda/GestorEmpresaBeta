@@ -23,7 +23,7 @@ public class ProveedorService {
     }
     public Proveedor obtenerProveedorId(Long id){
         try {
-            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
+            if (id == null || id < 1) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             return proveedorRepository.findById(id).orElse(null);
         } catch (IllegalArgumentException e) {
             throw e;
@@ -41,7 +41,7 @@ public class ProveedorService {
     }
     public boolean eliminarProveedor(Long id){
         try {
-            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
+            if (id == null || id < 1) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             if (!proveedorRepository.existsById(id)) return false;
             proveedorRepository.deleteById(id);
             return true;
@@ -53,7 +53,7 @@ public class ProveedorService {
     }
     public Proveedor actualizarProveedor(Long id, Proveedor datosCambiar){
         try {
-            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
+            if (id == null || id < 1) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             Proveedor existente = proveedorRepository.findById(id).orElse(null);
             if (existente == null) return null;
             validarProveedor(datosCambiar);

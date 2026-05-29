@@ -59,7 +59,7 @@ public class CompraProveedorService {
     }
     public CompraProveedor obtenerCompraProveedorId(Long id){
         try {
-            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
+            if (id == null || id < 1) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             return compraProveedorRepository.findById(id).orElse(null);
         } catch (IllegalArgumentException e) {
             throw e;
@@ -77,7 +77,7 @@ public class CompraProveedorService {
     }
     public boolean eliminarCompraProveedor(Long id){
         try {
-            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
+            if (id == null || id < 1) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             if (!compraProveedorRepository.existsById(id)) return false;
             compraProveedorRepository.deleteById(id);
             return true;
@@ -89,7 +89,7 @@ public class CompraProveedorService {
     }
     public CompraProveedor actualizarCompraProveedor(Long id, CompraProveedor datosCambiar){
         try {
-            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
+            if (id == null || id < 1) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             CompraProveedor existente = compraProveedorRepository.findById(id).orElse(null);
             if (existente == null) return null;
             validarCompra(datosCambiar);
@@ -99,6 +99,8 @@ public class CompraProveedorService {
             return compraProveedorRepository.save(existente);
         }catch (IllegalArgumentException e){
             throw e;
+        }catch (Exception e){
+            throw new RuntimeException("Error al actualizar la compra: " + e.getMessage(), e);
         }
     }
     public void validarCompra(CompraProveedor compra) {
@@ -111,5 +113,3 @@ public class CompraProveedorService {
     }
 
 }
-
-

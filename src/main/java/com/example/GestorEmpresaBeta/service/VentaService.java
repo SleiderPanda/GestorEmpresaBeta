@@ -57,7 +57,7 @@ public class VentaService {
     }
     public Venta obtenerVentaId(Long id){
         try {
-            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
+            if (id == null || id < 1) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             return ventaRepository.findById(id).orElse(null);
         } catch (IllegalArgumentException e) {
             throw e;
@@ -76,7 +76,7 @@ public class VentaService {
     }
     public boolean eliminarVenta(Long id){
         try {
-            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
+            if (id == null || id < 1) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             if (!ventaRepository.existsById(id)) return false;
             ventaRepository.deleteById(id);
             return true;
@@ -89,7 +89,7 @@ public class VentaService {
     }
     public Venta actualizarVenta(Long id, Venta datosCambiar){
         try {
-            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
+            if (id == null || id < 1) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             Venta existente = ventaRepository.findById(id).orElse(null);
             if (existente == null) return null;
             validarVenta(datosCambiar);
