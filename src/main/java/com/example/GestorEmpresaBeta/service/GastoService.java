@@ -14,6 +14,7 @@ public class GastoService {
     public Gasto guardarGasto(Gasto gasto){
         try {
             validarGasto(gasto);
+            gasto.setFecha(java.time.LocalDateTime.now());
             return gastoRepository.save(gasto);
         }  catch (IllegalArgumentException e) {
             throw e;
@@ -73,7 +74,5 @@ public class GastoService {
             throw new IllegalArgumentException("La descripción no puede estar vacía");
         if (gasto.getMonto() == null || gasto.getMonto() <= 0)
             throw new IllegalArgumentException("El monto debe ser mayor a 0");
-        if (gasto.getFecha() == null)
-            throw new IllegalArgumentException("La fecha no puede estar vacía");
     }
 }
