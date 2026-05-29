@@ -4,7 +4,7 @@ import com.example.GestorEmpresaBeta.model.Cliente;
 import com.example.GestorEmpresaBeta.model.DetalleVenta;
 import com.example.GestorEmpresaBeta.model.Producto;
 import com.example.GestorEmpresaBeta.model.Venta;
-import com.example.GestorEmpresaBeta.repository.ClienteRepository;
+import com.example.GestorEmpresaBeta.repository.ClienteRepositoryRepository;
 import com.example.GestorEmpresaBeta.repository.ProductoRepository;
 import com.example.GestorEmpresaBeta.repository.VentaRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class VentaService {
     private final VentaRepository ventaRepository;
     private final ProductoRepository productoRepository;
-    private final ClienteRepository clienteRepository;
+    private final ClienteRepositoryRepository clienteRepositoryRepository;
     //API para guardar venta calcular el subtotal  de cada detalle
     // suma el total de venta y descuenta el stock en tiempo real de cada producto
     public Venta guardarVenta(Venta venta){
@@ -39,7 +39,7 @@ public class VentaService {
             }
             venta.setTotal(total);
             venta.setFecha(LocalDateTime.now());
-            Cliente clienteCompleto = clienteRepository.findById(venta.getCliente().getIdCliente())
+            Cliente clienteCompleto = clienteRepositoryRepository.findById(venta.getCliente().getIdCliente())
                     .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
             venta.setCliente(clienteCompleto);
             Venta ventaGuardada = ventaRepository.save(venta);
@@ -57,7 +57,7 @@ public class VentaService {
     }
     public Venta obtenerVentaId(Long id){
         try {
-            if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
+            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             return ventaRepository.findById(id).orElse(null);
         } catch (IllegalArgumentException e) {
             throw e;
@@ -76,7 +76,7 @@ public class VentaService {
     }
     public boolean eliminarVenta(Long id){
         try {
-            if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
+            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             if (!ventaRepository.existsById(id)) return false;
             ventaRepository.deleteById(id);
             return true;
@@ -89,7 +89,7 @@ public class VentaService {
     }
     public Venta actualizarVenta(Long id, Venta datosCambiar){
         try {
-            if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
+            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             Venta existente = ventaRepository.findById(id).orElse(null);
             if (existente == null) return null;
             validarVenta(datosCambiar);

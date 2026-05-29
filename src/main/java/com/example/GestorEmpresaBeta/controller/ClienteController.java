@@ -38,22 +38,6 @@ public class ClienteController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    //Api nueva de obtener por documento
-    @GetMapping("/documento/{documento}")
-    public ResponseEntity<Cliente> obtenerClienteDocumento(@PathVariable String documento) {
-        try {
-            Cliente cliente = clienteService.obtenerClienteDocumento(documento);
-            if (cliente != null) {
-                return new ResponseEntity<>(cliente, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
     @GetMapping
     public ResponseEntity<Page<Cliente>> obtenerClientes(@RequestParam(defaultValue = "0") int pagina, @RequestParam(defaultValue = "10") int tamanio) {
         try {

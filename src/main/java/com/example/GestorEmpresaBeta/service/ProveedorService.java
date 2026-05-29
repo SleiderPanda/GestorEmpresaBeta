@@ -1,74 +1,67 @@
 package com.example.GestorEmpresaBeta.service;
 
-import com.example.GestorEmpresaBeta.model.Cliente;
-import com.example.GestorEmpresaBeta.repository.ClienteRepositoryRepository;
+import com.example.GestorEmpresaBeta.model.Proveedor;
+import com.example.GestorEmpresaBeta.repository.ProveedorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 @RequiredArgsConstructor
 @Service
-public class ClienteService {
-    private final ClienteRepositoryRepository clienteRepositoryRepository;
-
-    public Cliente guardarCliente(Cliente cliente){
+public class ProveedorService {
+    private final ProveedorRepository proveedorRepository;
+    public Proveedor guardarProveedor(Proveedor proveedor){
         try {
-            validarCliente(cliente);
-            return clienteRepositoryRepository.save(cliente);
-        } catch (IllegalArgumentException e) {
+            validarProveedor(proveedor);
+            return proveedorRepository.save(proveedor);
+        }  catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException("Error al guardar el cliente: " + e.getMessage(), e);
         }
     }
-
-    public Cliente obtenerClienteId(Long id){
+    public Proveedor obtenerProveedorID(Long id){
         try {
             if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
-            return clienteRepositoryRepository.findById(id).orElse(null);
+            return proveedorRepository.findById(id).orElse(null);
         } catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener el cliente por ID: " + e.getMessage(), e);
         }
     }
-
-    public Page<Cliente> obtenerClientes(int pagina, int tamanio){
+    public Page<Proveedor> obtenerProveedores(int pagina, int tamanio){
         try {
             Pageable pageable = PageRequest.of(pagina, tamanio);
-            return clienteRepositoryRepository.findAll(pageable);
-        } catch (Exception e) {
+            return proveedorRepository.findAll(pageable);
+        }catch (Exception e){
             throw new RuntimeException("Error al obtener la lista de clientes: " + e.getMessage(), e);
         }
     }
-
-    public boolean eliminarCliente(Long id){
+    public boolean eliminarProveedor(Long id){
         try {
             if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
-            if (!clienteRepositoryRepository.existsById(id)) return false;
-            clienteRepositoryRepository.deleteById(id);
+            if (!proveedorRepository.existsById(id)) return false;
+            proveedorRepository.deleteById(id);
             return true;
-        } catch (IllegalArgumentException e) {
+        }catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Error al eliminar el cliente: " + e.getMessage(), e);
+            throw new RuntimeException("Error al obtener el cliente por ID: " + e.getMessage(), e);
         }
     }
-
-    public Cliente actualizarCliente(Long id, Cliente datosCambiar){
+    public Proveedor actualizarProveedor(Long id, Proveedor datosCambiar){
         try {
             if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
-            Cliente existente = clienteRepositoryRepository.findById(id).orElse(null);
+            Proveedor existente = proveedorRepository.findById(id).orElse(null);
             if (existente == null) return null;
-            validarCliente(datosCambiar);
+            validarProveedor(datosCambiar);
             existente.setNombre(datosCambiar.getNombre());
-            existente.setApellido(datosCambiar.getApellido());
             existente.setDocumento(datosCambiar.getDocumento());
             existente.setCorreoElectronico(datosCambiar.getCorreoElectronico());
             existente.setTelefono(datosCambiar.getTelefono());
-            return clienteRepositoryRepository.save(existente);
+            return proveedorRepository.save(existente);
         } catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
@@ -76,12 +69,12 @@ public class ClienteService {
         }
     }
 
-    private void validarCliente(Cliente cliente) {
-        if (cliente.getNombre() == null || cliente.getNombre().isBlank())
+    public void validarProveedor(Proveedor proveedor) {
+        if (proveedor.getNombre() == null || proveedor.getNombre().isBlank())
             throw new IllegalArgumentException("El nombre no puede estar vacío");
-        if (cliente.getApellido() == null || cliente.getApellido().isBlank())
-            throw new IllegalArgumentException("El apellido no puede estar vacío");
-        if (cliente.getDocumento() == null || cliente.getDocumento().isBlank())
-            throw new IllegalArgumentException("El documento no puede estar vacío");
+        if (proveedor.getDocumento() == null || proveedor.getDocumento().isBlank())
+            throw new IllegalArgumentException("El documento no puede estar vacio");
+        if (proveedor.getCorreoElectronico() == null || proveedor.getCorreoElectronico().isBlank())
+            throw new IllegalArgumentException("El correo electronico no puede estar vacio");
     }
 }

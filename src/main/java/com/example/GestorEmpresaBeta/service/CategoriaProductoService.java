@@ -27,7 +27,7 @@ public class CategoriaProductoService {
 
     public CategoriaProducto obtenerCategoriaId(Long id) {
         try {
-            if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
+            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             return categoriaProductoRepository.findById(id).orElse(null);
         } catch (IllegalArgumentException e) {
             throw e;
@@ -47,7 +47,7 @@ public class CategoriaProductoService {
 
     public boolean eliminarCategoria(Long id) {
         try {
-            if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
+            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             if (!categoriaProductoRepository.existsById(id)) return false;
             categoriaProductoRepository.deleteById(id);
             return true;
@@ -60,7 +60,7 @@ public class CategoriaProductoService {
 
     public CategoriaProducto actualizarCategoria(Long id, CategoriaProducto datosCambiar) {
         try {
-            if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
+            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             CategoriaProducto existente = categoriaProductoRepository.findById(id).orElse(null);
             if (existente == null) return null;
             validarCategoria(datosCambiar);

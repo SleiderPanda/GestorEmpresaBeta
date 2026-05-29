@@ -36,7 +36,7 @@ public class ProductoService {
 
     public Producto obtenerProductoId(Long id) {
         try {
-            if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
+            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             return productoRepository.findById(id).orElse(null);
         } catch (IllegalArgumentException e) {
             throw e;
@@ -47,7 +47,7 @@ public class ProductoService {
 
     public boolean eliminarProducto(Long id) {
         try {
-            if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
+            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             if (!productoRepository.existsById(id)) return false;
             productoRepository.deleteById(id);
             return true;
@@ -60,7 +60,7 @@ public class ProductoService {
 
     public Producto actualizarProducto(Long id, Producto datosCambiar) {
         try {
-            if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
+            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             Producto existente = productoRepository.findById(id).orElse(null);
             if (existente == null) return null;
             validarProducto(datosCambiar);

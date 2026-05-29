@@ -23,7 +23,7 @@ public class EmpleadoSerivce {
     }
     public Empleado obtenerEmpleadoId(Long id) {
         try {
-            if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
+            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             return empleadoRepository.findById(id).orElse(null);
         } catch (IllegalArgumentException e) {
             throw e;
@@ -41,7 +41,7 @@ public class EmpleadoSerivce {
     }
     public boolean eliminarEmpleado(Long id){
         try {
-            if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
+            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             if (!empleadoRepository.existsById(id)) return false;
             empleadoRepository.deleteById(id);
             return true;
@@ -53,7 +53,7 @@ public class EmpleadoSerivce {
     }
     public Empleado actualizarEmpleado(Long id, Empleado datosCambiar){
         try {
-            if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
+            if (id == null || id < 0) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
             Empleado existente = empleadoRepository.findById(id).orElse(null);
             if (existente == null) return null;
             validarEmpleado(datosCambiar);
@@ -62,7 +62,7 @@ public class EmpleadoSerivce {
             existente.setDocumento(datosCambiar.getDocumento());
             existente.setCargo(datosCambiar.getCargo());
             existente.setCorreoElectronico(datosCambiar.getCorreoElectronico());
-            existente.setSalario(datosCambiar.getSalario()); // Add this line
+            existente.setSalario(datosCambiar.getSalario());
             return empleadoRepository.save(existente);
         } catch (IllegalArgumentException e) {
             throw e;
@@ -82,7 +82,7 @@ public class EmpleadoSerivce {
             throw new IllegalArgumentException("El cargo no puede estar vacío");
         if (empleado.getCorreoElectronico() == null || empleado.getCorreoElectronico().isBlank())
             throw new IllegalArgumentException("El correo electrónico no puede estar vacío");
-        if (empleado.getSalario() == null || empleado.getSalario() <= 0) // Add this line
-            throw new IllegalArgumentException("El salario no puede ser nulo o menor o igual a cero");
+        if (empleado.getSalario() == null || empleado.getSalario() < 0)
+            throw new IllegalArgumentException("El salario no puede ser nulo o menor a 0");
     }
 }
