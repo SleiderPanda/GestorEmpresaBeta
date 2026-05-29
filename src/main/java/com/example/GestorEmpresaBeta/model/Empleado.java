@@ -1,0 +1,24 @@
+package com.example.GestorEmpresaBeta.model;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
+@Data @RequiredArgsConstructor
+@Entity @Table(name = "empleados")
+public class Empleado {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long idEmpleado;
+    @Column(nullable = false, unique = true)
+    String documento;
+    @Column(nullable = false)
+    String nombre;
+    @Column(nullable = false)
+    String apellido;
+    @Column(unique = true,nullable = false)
+    String correoElectronico;
+    @Column(unique = true,length = 10)
+    String telefono;
+    @Column(nullable = false)
+    String cargo;
+}

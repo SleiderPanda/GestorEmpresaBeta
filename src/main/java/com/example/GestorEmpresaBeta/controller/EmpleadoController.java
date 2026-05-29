@@ -1,40 +1,33 @@
-// CategoriaProductoController.java
 package com.example.GestorEmpresaBeta.controller;
 
-import com.example.GestorEmpresaBeta.model.CategoriaProducto;
-import com.example.GestorEmpresaBeta.service.CategoriaProductoService;
+import com.example.GestorEmpresaBeta.model.Empleado;
+import com.example.GestorEmpresaBeta.service.EmpleadoSerivce;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RequiredArgsConstructor
-@RestController
-@RequestMapping("/api/categorias")
-public class CategoriaProductoController {
-
-    private final CategoriaProductoService categoriaProductoService;
-
+@RestController @RequestMapping("/empleados")
+public class EmpleadoController {
+    private final EmpleadoSerivce empleadoSerivce;
     @PostMapping
-    public ResponseEntity<CategoriaProducto> guardarCategoria(@RequestBody CategoriaProducto categoriaProducto) {
+    public ResponseEntity<Empleado> guardarEmpleado(@RequestBody Empleado empleado) {
         try {
-            return new ResponseEntity<>(categoriaProductoService.guardarCategoria(categoriaProducto), HttpStatus.CREATED);
+            return new ResponseEntity<>(empleadoSerivce.guardarEmpleado(empleado), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping("/{id}")
-    public ResponseEntity<CategoriaProducto> obtenerCategoriaId(@PathVariable Long id) {
+    public ResponseEntity<Empleado> obtenerEmpleadoId(@PathVariable Long id) {
         try {
-            CategoriaProducto categoriaProducto = categoriaProductoService.obtenerCategoriaId(id);
-            if (categoriaProducto != null) {
-                return new ResponseEntity<>(categoriaProducto, HttpStatus.OK);
+            Empleado empleado = empleadoSerivce.obtenerEmpleadoId(id);
+            if (empleado != null) {
+                return new ResponseEntity<>(empleado, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -44,22 +37,20 @@ public class CategoriaProductoController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping
-    public ResponseEntity<Page<CategoriaProducto>> obtenerCategorias(@RequestParam(defaultValue = "0") int pagina, @RequestParam(defaultValue = "10") int tamanio) {
+    public ResponseEntity<Page<Empleado>> obtenerEmpleados(@RequestParam(defaultValue = "0") int pagina, @RequestParam(defaultValue = "10") int tamanio){
         try {
-            return new ResponseEntity<>(categoriaProductoService.obtenerCategorias(pagina, tamanio), HttpStatus.OK);
+            return new ResponseEntity<>(empleadoSerivce.obtenerEmpleados(pagina, tamanio), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> eliminarCategoria(@PathVariable Long id) {
+    public ResponseEntity<Boolean> eliminarEmpleado(@PathVariable Long id) {
         try {
-            boolean eliminado = categoriaProductoService.eliminarCategoria(id);
+            boolean eliminado = empleadoSerivce.eliminarEmpleado(id);
             if (eliminado) {
                 return new ResponseEntity<>(true, HttpStatus.OK);
             } else {
@@ -71,13 +62,12 @@ public class CategoriaProductoController {
             return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @PutMapping("/{id}")
-    public ResponseEntity<CategoriaProducto> actualizarCategoria(@PathVariable Long id, @RequestBody CategoriaProducto datosCambiar) {
+    public ResponseEntity<Empleado> actualizarEmpleado(@PathVariable Long id, @RequestBody Empleado datosCambiar) {
         try {
-            CategoriaProducto categoriaProductoActualizada = categoriaProductoService.actualizarCategoria(id, datosCambiar);
-            if (categoriaProductoActualizada != null) {
-                return new ResponseEntity<>(categoriaProductoActualizada, HttpStatus.OK);
+            Empleado empleadoActualizado = empleadoSerivce.actualizarEmpleado(id, datosCambiar);
+            if (empleadoActualizado != null) {
+                return new ResponseEntity<>(empleadoActualizado, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -87,4 +77,5 @@ public class CategoriaProductoController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }

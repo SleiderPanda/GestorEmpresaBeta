@@ -1,27 +1,21 @@
-// ProductoController.java
 package com.example.GestorEmpresaBeta.controller;
 
 import com.example.GestorEmpresaBeta.model.Cliente;
-import com.example.GestorEmpresaBeta.model.Producto;
-import com.example.GestorEmpresaBeta.service.ProductoService;
+import com.example.GestorEmpresaBeta.service.ClienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RequiredArgsConstructor
-@RestController @RequestMapping("/api/productos")
-public class ProductoController {
-
-    private final ProductoService productoService;
-
+@RestController @RequestMapping("/api/clientes")
+public class ClienteController {
+    private final ClienteService clienteService;
     @PostMapping
-    public ResponseEntity<Producto> guardarProducto(@RequestBody Producto producto) {
+    public ResponseEntity<Cliente> guardarCliente(@RequestBody Cliente cliente) {
         try {
-            return new ResponseEntity<>(productoService.guardarProducto(producto), HttpStatus.CREATED);
+            return new ResponseEntity<>(clienteService.guardarCliente(cliente), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
@@ -30,11 +24,11 @@ public class ProductoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Producto> obtenerProductoId(@PathVariable Long id) {
+    public ResponseEntity<Cliente> obtenerClienteId(@PathVariable Long id) {
         try {
-            Producto producto = productoService.obtenerProductoId(id);
-            if (producto != null) {
-                return new ResponseEntity<>(producto, HttpStatus.OK);
+            Cliente cliente = clienteService.obtenerClienteId(id);
+            if (cliente != null) {
+                return new ResponseEntity<>(cliente, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -44,11 +38,26 @@ public class ProductoController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @GetMapping
-    public ResponseEntity<Page<Producto>> obtenerProductos(@RequestParam(defaultValue = "0") int pagina, @RequestParam(defaultValue = "10") int tamanio) {
+    //Api nueva de obtener por documento
+    @GetMapping("/documento/{documento}")
+    public ResponseEntity<Cliente> obtenerClienteDocumento(@PathVariable String documento) {
         try {
-            return new ResponseEntity<>(productoService.obtenerProductos(pagina, tamanio), HttpStatus.OK);
+            Cliente cliente = clienteService.obtenerClienteDocumento(documento);
+            if (cliente != null) {
+                return new ResponseEntity<>(cliente, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping
+    public ResponseEntity<Page<Cliente>> obtenerClientes(@RequestParam(defaultValue = "0") int pagina, @RequestParam(defaultValue = "10") int tamanio) {
+        try {
+            return new ResponseEntity<>(clienteService.obtenerClientes(pagina, tamanio), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
@@ -57,9 +66,9 @@ public class ProductoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> eliminarProducto(@PathVariable Long id) {
+    public ResponseEntity<Boolean> eliminarCliente(@PathVariable Long id) {
         try {
-            boolean eliminado = productoService.eliminarProducto(id);
+            boolean eliminado = clienteService.eliminarCliente(id);
             if (eliminado) {
                 return new ResponseEntity<>(true, HttpStatus.OK);
             } else {
@@ -73,11 +82,11 @@ public class ProductoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Producto> actualizarProducto(@PathVariable Long id, @RequestBody Producto datosCambiar) {
+    public ResponseEntity<Cliente> actualizarCliente(@PathVariable Long id, @RequestBody Cliente datosCambiar) {
         try {
-            Producto productoActualizado = productoService.actualizarProducto(id, datosCambiar);
-            if (productoActualizado != null) {
-                return new ResponseEntity<>(productoActualizado, HttpStatus.OK);
+            Cliente clienteActualizado = clienteService.actualizarCliente(id, datosCambiar);
+            if (clienteActualizado != null) {
+                return new ResponseEntity<>(clienteActualizado, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -87,4 +96,5 @@ public class ProductoController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }
