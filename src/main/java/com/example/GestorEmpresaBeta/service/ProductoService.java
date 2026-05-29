@@ -1,6 +1,8 @@
 package com.example.GestorEmpresaBeta.service;
 
+import com.example.GestorEmpresaBeta.model.CategoriaProducto;
 import com.example.GestorEmpresaBeta.model.Producto;
+import com.example.GestorEmpresaBeta.repository.CategoriaProductoRepository;
 import com.example.GestorEmpresaBeta.repository.ProductoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,10 +15,13 @@ import org.springframework.stereotype.Service;
 public class ProductoService {
 
     private final ProductoRepository productoRepository;
-
+    private final CategoriaProductoRepository categoriaProductoRepository;
     public Producto guardarProducto(Producto producto) {
         try {
             validarProducto(producto);
+            CategoriaProducto categoria = categoriaProductoRepository.findById(producto.getCategoriaProducto().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
+            producto.setCategoriaProducto(categoria);
             return productoRepository.save(producto);
         } catch (IllegalArgumentException e) {
             throw e;

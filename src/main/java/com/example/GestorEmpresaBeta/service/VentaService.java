@@ -34,6 +34,8 @@ public class VentaService {
                 detalle.setPrecioUnitario(producto.getPrecioProducto());
                 detalle.setSubtotal(detalle.getCantidad() * detalle.getPrecioUnitario());
                 total += detalle.getSubtotal();
+                if (detalle.getCantidad() > producto.getStockProducto())
+                    throw new IllegalArgumentException("Stock insuficiente para el producto: " + producto.getNombreProducto() + ". Stock disponible: " + producto.getStockProducto());
                 producto.setStockProducto(producto.getStockProducto() - detalle.getCantidad());
                 productoRepository.save(producto);
             }
