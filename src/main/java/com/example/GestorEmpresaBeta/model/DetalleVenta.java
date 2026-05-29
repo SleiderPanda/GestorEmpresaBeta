@@ -1,5 +1,6 @@
 package com.example.GestorEmpresaBeta.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 public class DetalleVenta {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idDetalleventa;
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "venta", nullable = false)
     private Venta venta;
     @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "producto", nullable = false)

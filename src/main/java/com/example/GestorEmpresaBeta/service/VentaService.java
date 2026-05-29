@@ -1,8 +1,10 @@
 package com.example.GestorEmpresaBeta.service;
 
+import com.example.GestorEmpresaBeta.model.Cliente;
 import com.example.GestorEmpresaBeta.model.DetalleVenta;
 import com.example.GestorEmpresaBeta.model.Producto;
 import com.example.GestorEmpresaBeta.model.Venta;
+import com.example.GestorEmpresaBeta.repository.ClienteRepository;
 import com.example.GestorEmpresaBeta.repository.ProductoRepository;
 import com.example.GestorEmpresaBeta.repository.VentaRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
 public class VentaService {
     private final VentaRepository ventaRepository;
     private final ProductoRepository productoRepository;
+    private final ClienteRepository clienteRepository;
     //API para guardar venta calcular el subtotal  de cada detalle
     // suma el total de venta y descuenta el stock en tiempo real de cada producto
     public Venta guardarVenta(Venta venta){
@@ -25,7 +28,8 @@ public class VentaService {
             validarVenta(venta);
             double total = 0;
             for (DetalleVenta detalle : venta.getDetalles()) {
-                Producto producto = detalle.getProducto();
+                Producto producto = productoRepository.findById(detalle.getProducto().getIdProducto())
+                        .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
                 detalle.setVenta(venta);
                 detalle.setPrecioUnitario(producto.getPrecioProducto());
                 detalle.setSubtotal(detalle.getCantidad() * detalle.getPrecioUnitario());
@@ -35,7 +39,16 @@ public class VentaService {
             }
             venta.setTotal(total);
             venta.setFecha(LocalDateTime.now());
-            return ventaRepository.save(venta);
+            Cliente clienteCompleto = clienteRepository.findById(venta.getCliente().getIdCliente())
+                    .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
+            venta.setCliente(clienteCompleto);
+            Venta ventaGuardada = ventaRepository.save(venta);
+            for (DetalleVenta detalle : ventaGuardada.getDetalles()) {
+                Producto productoCompleto = productoRepository.findById(detalle.getProducto().getIdProducto())
+                        .orElse(null);
+                detalle.setProducto(productoCompleto);
+            }
+            return ventaGuardada;
         } catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
