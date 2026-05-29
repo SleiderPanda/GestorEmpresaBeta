@@ -13,16 +13,7 @@ public class EmpleadoSerivce {
     private final EmpleadoRepository empleadoRepository;
     public Empleado guardarEmpleado(Empleado empleado){
         try {
-            if (empleado.getNombre() == null || empleado.getNombre().isBlank())
-                throw new IllegalArgumentException("El nombre no puede estar vacío");
-            if (empleado.getApellido() == null || empleado.getApellido().isBlank())
-                throw new IllegalArgumentException("El apellido no puede estar vacío");
-            if (empleado.getDocumento() == null || empleado.getDocumento().isBlank())
-                throw new IllegalArgumentException("El documento no puede estar vacío");
-            if (empleado.getCargo() == null || empleado.getCargo().isBlank())
-                throw new IllegalArgumentException("El cargo no puede estar vacío");
-            if (empleado.getCorreoElectronico() == null || empleado.getCorreoElectronico().isBlank())
-                throw new IllegalArgumentException("El correo electrónico no puede estar vacío");
+            validarEmpleado(empleado);
             return empleadoRepository.save(empleado);
         } catch (IllegalArgumentException e) {
             throw e;
@@ -62,28 +53,36 @@ public class EmpleadoSerivce {
     }
     public Empleado actualizarEmpleado(Long id, Empleado datosCambiar){
         try {
+            if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
             Empleado existente = empleadoRepository.findById(id).orElse(null);
             if (existente == null) return null;
-            if (datosCambiar.getNombre() == null || datosCambiar.getNombre().isBlank())
-                throw new IllegalArgumentException("El nombre no puede estar vacío");
-            if (datosCambiar.getApellido() == null || datosCambiar.getApellido().isBlank())
-                throw new IllegalArgumentException("El apellido no puede estar vacío");
-            if (datosCambiar.getDocumento() == null || datosCambiar.getDocumento().isBlank())
-                throw new IllegalArgumentException("El documento no puede estar vacío");
-            if (datosCambiar.getCargo() == null || datosCambiar.getCargo().isBlank())
-                throw new IllegalArgumentException("El cargo no puede estar vacío");
-            if (datosCambiar.getCorreoElectronico() == null || datosCambiar.getCorreoElectronico().isBlank())
-                throw new IllegalArgumentException("El correo electrónico no puede estar vacío");
+            validarEmpleado(datosCambiar);
             existente.setNombre(datosCambiar.getNombre());
             existente.setApellido(datosCambiar.getApellido());
             existente.setDocumento(datosCambiar.getDocumento());
             existente.setCargo(datosCambiar.getCargo());
             existente.setCorreoElectronico(datosCambiar.getCorreoElectronico());
+            existente.setSalario(datosCambiar.getSalario()); // Add this line
             return empleadoRepository.save(existente);
         } catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException("Error al actualizar el empleado: " + e.getMessage(), e);
         }
+    }
+
+    private void validarEmpleado(Empleado empleado) {
+        if (empleado.getNombre() == null || empleado.getNombre().isBlank())
+            throw new IllegalArgumentException("El nombre no puede estar vacío");
+        if (empleado.getApellido() == null || empleado.getApellido().isBlank())
+            throw new IllegalArgumentException("El apellido no puede estar vacío");
+        if (empleado.getDocumento() == null || empleado.getDocumento().isBlank())
+            throw new IllegalArgumentException("El documento no puede estar vacío");
+        if (empleado.getCargo() == null || empleado.getCargo().isBlank())
+            throw new IllegalArgumentException("El cargo no puede estar vacío");
+        if (empleado.getCorreoElectronico() == null || empleado.getCorreoElectronico().isBlank())
+            throw new IllegalArgumentException("El correo electrónico no puede estar vacío");
+        if (empleado.getSalario() == null || empleado.getSalario() <= 0) // Add this line
+            throw new IllegalArgumentException("El salario no puede ser nulo o menor o igual a cero");
     }
 }

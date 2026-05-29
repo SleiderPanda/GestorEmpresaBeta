@@ -8,8 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @Service
 public class CategoriaProductoService {
@@ -18,10 +16,7 @@ public class CategoriaProductoService {
 
     public CategoriaProducto guardarCategoria(CategoriaProducto categoriaProducto) {
         try {
-            if (categoriaProducto.getNombre() == null || categoriaProducto.getNombre().isBlank())
-                throw new IllegalArgumentException("El nombre no puede estar vacío");
-            if (categoriaProducto.getDescripcion() == null || categoriaProducto.getDescripcion().isBlank())
-                throw new IllegalArgumentException("La descripción no puede estar vacía");
+            validarCategoria(categoriaProducto);
             return categoriaProductoRepository.save(categoriaProducto);
         } catch (IllegalArgumentException e) {
             throw e;
@@ -65,12 +60,10 @@ public class CategoriaProductoService {
 
     public CategoriaProducto actualizarCategoria(Long id, CategoriaProducto datosCambiar) {
         try {
+            if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
             CategoriaProducto existente = categoriaProductoRepository.findById(id).orElse(null);
             if (existente == null) return null;
-            if (datosCambiar.getNombre() == null || datosCambiar.getNombre().isBlank())
-                throw new IllegalArgumentException("El nombre no puede estar vacío");
-            if (datosCambiar.getDescripcion() == null || datosCambiar.getDescripcion().isBlank())
-                throw new IllegalArgumentException("La descripción no puede estar vacía");
+            validarCategoria(datosCambiar);
             existente.setNombre(datosCambiar.getNombre());
             existente.setDescripcion(datosCambiar.getDescripcion());
             return categoriaProductoRepository.save(existente);
@@ -79,5 +72,12 @@ public class CategoriaProductoService {
         } catch (Exception e) {
             throw new RuntimeException("Error al actualizar la categoría de producto: " + e.getMessage(), e);
         }
+    }
+
+    private void validarCategoria(CategoriaProducto categoriaProducto) {
+        if (categoriaProducto.getNombre() == null || categoriaProducto.getNombre().isBlank())
+            throw new IllegalArgumentException("El nombre no puede estar vacío");
+        if (categoriaProducto.getDescripcion() == null || categoriaProducto.getDescripcion().isBlank())
+            throw new IllegalArgumentException("La descripción no puede estar vacía");
     }
 }

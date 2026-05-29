@@ -8,20 +8,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @Service
 public class ClienteService {
     private final ClienteRepository clienteRepository;
+
     public Cliente guardarCliente(Cliente cliente){
         try {
-            if (cliente.getNombre() == null || cliente.getNombre().isBlank())
-                throw new IllegalArgumentException("El nombre no puede estar vacío");
-            if (cliente.getApellido() == null || cliente.getApellido().isBlank())
-                throw new IllegalArgumentException("El apellido no puede estar vacío");
-            if (cliente.getDocumento() == null || cliente.getDocumento().isBlank())
-                throw new IllegalArgumentException("El documento no puede estar vacío");
+            validarCliente(cliente);
             return clienteRepository.save(cliente);
         } catch (IllegalArgumentException e) {
             throw e;
@@ -29,6 +23,7 @@ public class ClienteService {
             throw new RuntimeException("Error al guardar el cliente: " + e.getMessage(), e);
         }
     }
+
     public Cliente obtenerClienteId(Long id){
         try {
             if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
@@ -39,6 +34,7 @@ public class ClienteService {
             throw new RuntimeException("Error al obtener el cliente por ID: " + e.getMessage(), e);
         }
     }
+
     //API nueva de obtener por documento
     public Cliente obtenerClienteDocumento(String documento){
         try {
@@ -50,6 +46,7 @@ public class ClienteService {
             throw new RuntimeException("Error al obtener el cliente por documento: " + e.getMessage(), e);
         }
     }
+
     public Page<Cliente> obtenerClientes(int pagina, int tamanio){
         try {
             Pageable pageable = PageRequest.of(pagina, tamanio);
@@ -58,6 +55,7 @@ public class ClienteService {
             throw new RuntimeException("Error al obtener la lista de clientes: " + e.getMessage(), e);
         }
     }
+
     public boolean eliminarCliente(Long id){
         try {
             if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
@@ -70,16 +68,13 @@ public class ClienteService {
             throw new RuntimeException("Error al eliminar el cliente: " + e.getMessage(), e);
         }
     }
+
     public Cliente actualizarCliente(Long id, Cliente datosCambiar){
         try {
+            if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
             Cliente existente = clienteRepository.findById(id).orElse(null);
             if (existente == null) return null;
-            if (datosCambiar.getNombre() == null || datosCambiar.getNombre().isBlank())
-                throw new IllegalArgumentException("El nombre no puede estar vacío");
-            if (datosCambiar.getApellido() == null || datosCambiar.getApellido().isBlank())
-                throw new IllegalArgumentException("El apellido no puede estar vacío");
-            if (datosCambiar.getDocumento() == null || datosCambiar.getDocumento().isBlank())
-                throw new IllegalArgumentException("El documento no puede estar vacío");
+            validarCliente(datosCambiar);
             existente.setNombre(datosCambiar.getNombre());
             existente.setApellido(datosCambiar.getApellido());
             existente.setDocumento(datosCambiar.getDocumento());
@@ -91,5 +86,14 @@ public class ClienteService {
         } catch (Exception e) {
             throw new RuntimeException("Error al actualizar el cliente: " + e.getMessage(), e);
         }
+    }
+
+    private void validarCliente(Cliente cliente) {
+        if (cliente.getNombre() == null || cliente.getNombre().isBlank())
+            throw new IllegalArgumentException("El nombre no puede estar vacío");
+        if (cliente.getApellido() == null || cliente.getApellido().isBlank())
+            throw new IllegalArgumentException("El apellido no puede estar vacío");
+        if (cliente.getDocumento() == null || cliente.getDocumento().isBlank())
+            throw new IllegalArgumentException("El documento no puede estar vacío");
     }
 }

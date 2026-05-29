@@ -1,6 +1,5 @@
 package com.example.GestorEmpresaBeta.service;
 
-import com.example.GestorEmpresaBeta.model.Cliente;
 import com.example.GestorEmpresaBeta.model.Producto;
 import com.example.GestorEmpresaBeta.repository.ProductoRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -19,14 +16,7 @@ public class ProductoService {
 
     public Producto guardarProducto(Producto producto) {
         try {
-            if (producto.getNombreProducto() == null || producto.getNombreProducto().isBlank())
-                throw new IllegalArgumentException("El nombre no puede estar vacío");
-            if (producto.getPrecioProducto() == null || producto.getPrecioProducto() <= 0)
-                throw new IllegalArgumentException("El precio debe ser mayor a 0");
-            if (producto.getStockProducto() == null || producto.getStockProducto() <= 0)
-                throw new IllegalArgumentException("El stock debe ser mayor a 0");
-            if (producto.getCategoriaProducto() == null)
-                throw new IllegalArgumentException("La categoría no puede estar vacía");
+            validarProducto(producto);
             return productoRepository.save(producto);
         } catch (IllegalArgumentException e) {
             throw e;
@@ -70,20 +60,14 @@ public class ProductoService {
 
     public Producto actualizarProducto(Long id, Producto datosCambiar) {
         try {
+            if (id == null || id <= 0) throw new IllegalArgumentException("El id no puede ser nulo o negativo");
             Producto existente = productoRepository.findById(id).orElse(null);
             if (existente == null) return null;
-            if (datosCambiar.getNombreProducto() == null || datosCambiar.getNombreProducto().isBlank())
-                throw new IllegalArgumentException("El nombre no puede estar vacío");
-            if (datosCambiar.getPrecioProducto() == null || datosCambiar.getPrecioProducto() <= 0)
-                throw new IllegalArgumentException("El precio debe ser mayor a 0");
-            if (datosCambiar.getStockProducto() == null || datosCambiar.getStockProducto() <= 0)
-                throw new IllegalArgumentException("El stock debe ser mayor a 0");
-            if (datosCambiar.getCategoriaProducto() == null)
-                throw new IllegalArgumentException("La categoría no puede estar vacía");
+            validarProducto(datosCambiar);
             existente.setNombreProducto(datosCambiar.getNombreProducto());
             existente.setPrecioProducto(datosCambiar.getPrecioProducto());
             existente.setStockProducto(datosCambiar.getStockProducto());
-            existente.setDescripciónProducto(datosCambiar.getDescripciónProducto());
+            existente.setDescripcionProducto(datosCambiar.getDescripcionProducto());
             existente.setCategoriaProducto(datosCambiar.getCategoriaProducto());
             return productoRepository.save(existente);
         } catch (IllegalArgumentException e) {
@@ -91,5 +75,16 @@ public class ProductoService {
         } catch (Exception e) {
             throw new RuntimeException("Error al actualizar el producto: " + e.getMessage(), e);
         }
+    }
+
+    private void validarProducto(Producto producto) {
+        if (producto.getNombreProducto() == null || producto.getNombreProducto().isBlank())
+            throw new IllegalArgumentException("El nombre del producto no puede estar vacío");
+        if (producto.getPrecioProducto() == null || producto.getPrecioProducto() <= 0)
+            throw new IllegalArgumentException("El precio debe ser mayor a 0");
+        if (producto.getStockProducto() == null || producto.getStockProducto() < 0)
+            throw new IllegalArgumentException("El stock no puede ser negativo");
+        if (producto.getCategoriaProducto() == null)
+            throw new IllegalArgumentException("La categoría no puede estar vacía");
     }
 }

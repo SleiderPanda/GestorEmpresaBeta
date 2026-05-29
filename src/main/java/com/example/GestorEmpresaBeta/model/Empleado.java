@@ -8,17 +8,19 @@ import lombok.RequiredArgsConstructor;
 @Entity @Table(name = "empleados")
 public class Empleado {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idEmpleado;
+    private Long idEmpleado;
     @Column(nullable = false, unique = true)
-    String documento;
+    private String documento;
     @Column(nullable = false)
-    String nombre;
+    private String nombre;
     @Column(nullable = false)
-    String apellido;
+    private String apellido;
     @Column(unique = true,nullable = false)
-    String correoElectronico;
-    @Column(unique = true,length = 10)
-    String telefono;
+    private String correoElectronico;
     @Column(nullable = false)
-    String cargo;
+    private Double salario;
+    @Column(unique = true,length = 10)
+    private String telefono;
+    @Column(nullable = false)
+    private String cargo;
 }

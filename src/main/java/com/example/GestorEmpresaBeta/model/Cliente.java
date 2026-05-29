@@ -8,15 +8,15 @@ import lombok.RequiredArgsConstructor;
 @Entity @Table(name = "clientes")
 public class Cliente {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idProducto;
+    private Long idCliente;
     @Column(nullable = false, unique = true)
-    String documento;
+    private String documento;
     @Column(nullable = false)
-    String nombre;
+    private String nombre;
     @Column(nullable = false)
-    String apellido;
+    private String apellido;
     @Column(unique = true)
-    String correoElectronico;
+    private String correoElectronico;
     @Column(unique = true,length = 10)
-    String telefono;
+    private String telefono;
 }
