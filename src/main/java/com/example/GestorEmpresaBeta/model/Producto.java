@@ -13,7 +13,7 @@ public class Producto {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idProducto;
-
+    @Column(unique = true)
     private String nombreProducto;
 
     @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "categoria", nullable = false)

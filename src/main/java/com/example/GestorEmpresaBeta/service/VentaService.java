@@ -59,7 +59,7 @@ public class VentaService {
     }
     public Venta obtenerVentaId(Long id){
         try {
-            if (id == null || id < 1) throw new IllegalArgumentException("El id no puede ser nulo o menor a 1");
+            if (id == null || id < 1) throw new IllegalArgumentException(   "El id no puede ser nulo o menor a 1");
             return ventaRepository.findById(id).orElse(null);
         } catch (IllegalArgumentException e) {
             throw e;

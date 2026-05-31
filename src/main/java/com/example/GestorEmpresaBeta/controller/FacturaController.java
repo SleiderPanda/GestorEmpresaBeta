@@ -14,40 +14,43 @@ public class FacturaController {
     private final FacturaService facturaService;
 
     @PostMapping("/generar/{idVenta}")
-    public ResponseEntity<Factura> generarFactura(@PathVariable Long idVenta) {
+    public ResponseEntity<?> generarFactura(@PathVariable Long idVenta) {
         try {
             return new ResponseEntity<>(facturaService.generarFactura(idVenta), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Factura> obtenerFacturaId(@PathVariable Long id) {
+    public ResponseEntity<?> obtenerFacturaId(@PathVariable Long id) {
         try {
             Factura factura = facturaService.obtenerFacturaId(id);
             if (factura != null) {
                 return new ResponseEntity<>(factura, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Factura no encontrada con ID: " + id, HttpStatus.NOT_FOUND);
             }
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping
-    public ResponseEntity<Page<Factura>> obtenerFacturas(@RequestParam(defaultValue = "0") int pagina, @RequestParam(defaultValue = "10") int tamanio) {
+    public ResponseEntity<?> obtenerFacturas(@RequestParam(defaultValue = "0") int pagina, @RequestParam(defaultValue = "10") int tamanio) {
         try {
             return new ResponseEntity<>(facturaService.obtenerFacturas(pagina, tamanio), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
